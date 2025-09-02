@@ -1,6 +1,10 @@
 package com.maac.vehiculo.controllers;
 
 import com.maac.vehiculo.domain.Marca;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -11,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/marcas")
+@Tag(name = "Api MicroService Vehiculo - Marcas", description = "CRUD  de Marcas de Vehículos")
 public class MarcasRestController {
 
 
@@ -21,9 +26,14 @@ public class MarcasRestController {
     );
 
 
+    @ApiResponse(responseCode = "200", description = "Operacion exitosa - Recurso encontrado")
+    @ApiResponse(responseCode = "400", description = "Petición Incorrecta")
+    @ApiResponse(responseCode = "404", description = "Recurso No Encontrado")
+    @Operation(summary = "Recuperar una Marca por su Id", description = "Recupera una marca por su Id de tipo numérico. No puede ser un valor negativo. ")
+
     @GetMapping("/{id}")
-    public ResponseEntity<?> getMarcaById(@PathVariable Long id){
-        //return marcas.stream().filter(marca -> marca.getId() == id).;
+    public ResponseEntity<?> getMarcaById(@Parameter(description = "Id de la marca - Valor entero", required = true, example = "1")
+                                          @PathVariable Long id){
 
         if(id < 0){
             return ResponseEntity.badRequest().build();
@@ -36,10 +46,20 @@ public class MarcasRestController {
         return ResponseEntity.notFound().build();
     }
 
+
+
+    @ApiResponse(responseCode = "200", description = "Operacion exitosa - Recurso encontrado")
+    @Operation(summary = "Recupera todas las marcas de vehículos", description = "Recupera todas las marcas de vehiculos que se disponen. ")
+
     @GetMapping
     public ResponseEntity<?> listMarcas(){
         return ResponseEntity.ok(this.marcas);
     }
+
+
+    @ApiResponse(responseCode = "201", description = "Operacion exitosa - Recurso dado de alta")
+    @ApiResponse(responseCode = "400", description = "Petición Incorrecta")
+    @Operation(summary = "Crea una nueva Marca de Vehiculo", description = "Crea una nueva marca de vehículo")
 
     @PostMapping
     public ResponseEntity<?> createMarca(@RequestBody  Marca marca){
@@ -53,6 +73,10 @@ public class MarcasRestController {
         return ResponseEntity.created(location).build();
     }
 
+    @ApiResponse(responseCode = "200", description = "Operacion exitosa - Recurso actualizado")
+    @ApiResponse(responseCode = "400", description = "Petición Incorrecta - Corroborar con el schema Marca")
+    @ApiResponse(responseCode = "404", description = "Recurso No Encontrado")
+    @Operation(summary = "Recuperar una Marca por su Id", description = "Recupera una marca por su Id de tipo numérico. No puede ser un valor negativo. ")
 
     @PutMapping
     public ResponseEntity<?> updateMarca(@RequestBody  Marca marca){
