@@ -1,13 +1,17 @@
 package com.maac.vehiculo.controllers;
 
+import com.maac.vehiculo.configurations.AppConfig;
+import com.maac.vehiculo.configurations.ParametrosConfig;
 import com.maac.vehiculo.domain.Marca;
 import com.maac.vehiculo.services.MarcasService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -16,6 +20,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/marcas")
 @Tag(name = "Api MicroService Vehiculo - Marcas", description = "CRUD  de Marcas de Vehículos")
@@ -23,10 +28,14 @@ public class MarcasRestController {
 
 
     MarcasService marcasService;
+    AppConfig appConfig;
+    ParametrosConfig parametrosConfig;
 
+    public MarcasRestController(@Lazy MarcasService marcasService, AppConfig appConfig, ParametrosConfig parametrosConfig) {
 
-    public MarcasRestController(@Qualifier("autos") MarcasService marcasService) {
+        log.info("Constructor MarcasRestController - AppConfig {} - Parametros : {} ", appConfig,parametrosConfig);
         this.marcasService = marcasService;
+
     }
 
     ArrayList<Marca> marcas = new ArrayList<>(
@@ -49,7 +58,7 @@ public class MarcasRestController {
             return ResponseEntity.badRequest().build();
         }
 
-        for (Marca marca: this.marcas){
+        for (Marca marca: marcasService.listAllMarcas()){
             if(marca.getId().equals(id))
                 return  ResponseEntity.ok(marca);
         }

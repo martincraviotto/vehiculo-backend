@@ -12,12 +12,12 @@ import lombok.NonNull;
 @AllArgsConstructor
 public class Marca {
 
-    @Schema(description = "Identificador de una marca", example = "1")
     @NonNull
+    @Schema(description = "Identificador de una marca", example = "1")
     private Long id;
 
 
-    @Schema(description = "Nombre de una marca", example = "Jeep")
     @NonNull
+    @Schema(description = "Nombre de una marca", example = "Jeep")
     private String marca;
 }

@@ -1,12 +1,20 @@
 package com.maac.vehiculo.services;
 
 import com.maac.vehiculo.domain.Marca;
+import com.maac.vehiculo.helpers.ReportPDFImpl;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j //Sirve para disponer de un logger.
+@Lazy
 @Service("autos")
+@ConditionalOnProperty(prefix = "implementacion", value = "marcas", havingValue = "autos")
 public class MarcasServiceImpl implements  MarcasService{
 
 
@@ -16,7 +24,16 @@ public class MarcasServiceImpl implements  MarcasService{
                     new Marca(3L,"Ram"))
     );
 
+    //@Autowired
+    private ReportPDFImpl reportPDF;
+
+    public MarcasServiceImpl(ReportPDFImpl reportPDF) {
+        this.reportPDF = reportPDF;
+        log.info("Ejecutando constructor MarcasServiceImpl - autos");
+    }
+
     public List<Marca> listAllMarcas(){
-      return marcas;
+        this.reportPDF.generatePdfReport(marcas);
+        return marcas;
     }
 }
