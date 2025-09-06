@@ -1,6 +1,9 @@
 package com.maac.vehiculo.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.maac.vehiculo.validators.Cuit;
 import com.maac.vehiculo.validators.groups.OnCreate;
 import com.maac.vehiculo.validators.groups.OnUpdate;
@@ -12,7 +15,7 @@ import lombok.NonNull;
 
 import java.time.LocalDate;
 
-
+@JsonPropertyOrder({"webSite", "marca", "id"})
 @Schema(description = "Schema de una Marca de Vehiculo")
 @Data
 //@AllArgsConstructor
@@ -29,18 +32,21 @@ public class Marca {
     private String marca;
 
 
+    @JsonProperty("SitioWeb")
     @NotBlank(groups = OnUpdate.class) //Java Validation
-    @Size(min=6, max=20) //Java Validation
-    @Schema(description = "Sitio Web del fabricante de la marca", example="www.jeep.com")
+    @Size(min = 6, max = 20) //Java Validation
+    @Schema(description = "Sitio Web del fabricante de la marca", example = "www.jeep.com")
     private String webSite;
 
+    //@JsonIgnore
     @AssertTrue(groups = {OnUpdate.class, OnCreate.class})
-    @Schema(description = "Indica si la marca es Argentina", example="True")
+    @Schema(description = "Indica si la marca es Argentina", example = "True")
     private boolean industriaArgentina;
 
     /*
     @Email
     private String mail;
+
 
     @PositiveOrZero
     @Positive
