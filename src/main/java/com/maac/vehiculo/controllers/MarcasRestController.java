@@ -4,6 +4,8 @@ import com.maac.vehiculo.configurations.AppConfig;
 import com.maac.vehiculo.configurations.ParametrosConfig;
 import com.maac.vehiculo.domain.Marca;
 import com.maac.vehiculo.services.MarcasService;
+import com.maac.vehiculo.validators.groups.OnCreate;
+import com.maac.vehiculo.validators.groups.OnUpdate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -83,7 +86,7 @@ public class MarcasRestController {
     @Operation(summary = "Crea una nueva Marca de Vehiculo", description = "Crea una nueva marca de vehículo")
 
     @PostMapping
-    public ResponseEntity<?> createMarca(@RequestBody  Marca marca){
+    public ResponseEntity<?> createMarca(@RequestBody  @Validated(OnCreate.class)  Marca marca){
         this.marcas.add(marca);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -100,7 +103,7 @@ public class MarcasRestController {
     @Operation(summary = "Recuperar una Marca por su Id", description = "Recupera una marca por su Id de tipo numérico. No puede ser un valor negativo. ")
 
     @PutMapping
-    public ResponseEntity<?> updateMarca(@RequestBody  Marca marca){
+    public ResponseEntity<?> updateMarca(@RequestBody  @Validated(OnUpdate.class)  Marca marca){
         for (Marca m1: this.marcas){
             if(m1.getId().equals(marca.getId())) {
                 m1.setMarca(marca.getMarca());
