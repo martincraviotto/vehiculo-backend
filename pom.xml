@@ -81,6 +81,20 @@
 		</dependency>
 		<!-- Fin Dependencias de validaciones -->
 
+		<!-- Dependencias de JPA -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<!-- Fin Dependencias de JPA -->
+
+		<!-- Dependencias de POSTGRES -->
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+		</dependency>
+		<!-- Fin Dependencias de POSTGRES -->
+
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

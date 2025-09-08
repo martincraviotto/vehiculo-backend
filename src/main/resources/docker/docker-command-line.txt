@@ -1,0 +1,1 @@
+docker run --name myVehiculoPostgres -p 5432:5432 -e POSTGRES_PASSWORD=vehiculoMaac -e POSTGRES_DB=vehiculo -d postgres:14.3

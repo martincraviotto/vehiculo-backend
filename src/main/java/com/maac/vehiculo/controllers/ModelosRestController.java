@@ -1,14 +1,12 @@
 package com.maac.vehiculo.controllers;
 
 
-import com.maac.vehiculo.domain.Modelo;
 import com.maac.vehiculo.exceptions.ModeloNotFoundException;
 import com.maac.vehiculo.services.ModeloService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -29,6 +27,11 @@ public class ModelosRestController {
                         .orElseThrow(ModeloNotFoundException::new);
 
 
+        }
+
+        @GetMapping
+        public ResponseEntity<?> getAllModelos(Pageable pageable){
+                return ResponseEntity.ok(this.modeloService.getAllModelos(pageable));
         }
 
 
