@@ -5,6 +5,8 @@ import com.maac.vehiculo.exceptions.ModeloNotFoundException;
 import com.maac.vehiculo.services.ModeloService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +32,9 @@ public class ModelosRestController {
         }
 
         @GetMapping
-        public ResponseEntity<?> getAllModelos(Pageable pageable){
+        public ResponseEntity<?> getAllModelos(
+                @PageableDefault(size = 2,sort={"modelo", "id"}, direction = Sort.Direction.ASC)
+                Pageable pageable){
                 return ResponseEntity.ok(this.modeloService.getAllModelos(pageable));
         }
 

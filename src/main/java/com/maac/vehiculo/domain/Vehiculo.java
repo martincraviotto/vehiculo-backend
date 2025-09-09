@@ -6,7 +6,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
 @Data
-
+@AllArgsConstructor
 public class Vehiculo {
 
     @NonNull
