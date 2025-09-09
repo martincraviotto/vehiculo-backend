@@ -13,4 +13,5 @@ public interface ModeloService {
     public List<Modelo> getAllModelos(Pageable pageable);
 
 
+    public List<Modelo> getAllModelosWithIdLessThan(Long id);
 }

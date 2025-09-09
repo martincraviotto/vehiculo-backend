@@ -38,5 +38,10 @@ public class ModelosRestController {
                 return ResponseEntity.ok(this.modeloService.getAllModelos(pageable));
         }
 
+        @GetMapping("/idLessThan/{id}")
+        public ResponseEntity<?> getAllModelosWithIdLessThan(@PathVariable Long id){
+                return ResponseEntity.ok(this.modeloService.getAllModelosWithIdLessThan(id));
+        }
+
 
 }
