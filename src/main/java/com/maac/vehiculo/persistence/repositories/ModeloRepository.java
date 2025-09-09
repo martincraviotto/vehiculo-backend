@@ -10,8 +10,9 @@ import java.util.List;
 @Repository
 public interface ModeloRepository extends JpaRepository<ModeloEntity,Long> {
 
+    //MAS INFO SOBRE ESTE TEMA EN : https://www.baeldung.com/spring-jpa-like-queries
 
-    public List<ModeloRepository> findByIdLessThan(Long id);
+    public List<ModeloEntity> findByIdLessThan(Long id);
 
 
 }

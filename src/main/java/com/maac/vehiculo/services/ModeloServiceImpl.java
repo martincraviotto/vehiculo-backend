@@ -30,12 +30,17 @@ public class ModeloServiceImpl implements  ModeloService{
     @Override
     public List<Modelo> getAllModelos(Pageable pageable) {
         return this.modeloRepository.findAll(pageable)
-                .stream().map(modelosMapper::mapToModelo)
+                .stream()
+                .map(modelosMapper::mapToModelo)
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<Modelo> getAllModelosWithIdLessThan(Long id) {
-        return null;
+        return this.modeloRepository.findByIdLessThan(id)
+                .stream()
+                .map(modelosMapper::mapToModelo)
+                .collect(Collectors.toList());
+
     }
 }
