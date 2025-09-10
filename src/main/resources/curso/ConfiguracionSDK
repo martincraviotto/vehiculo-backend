@@ -1,0 +1,59 @@
+paso a paso con imágenes simuladas de IntelliJ IDEA para que alinees tu proyecto al JDK 21 (Corretto 21):
+
+🔹 1. Instalar Corretto 21
+
+Descargá Amazon Corretto 21 desde la página oficial
+.
+
+Instalalo en tu sistema (ej: C:\Program Files\Amazon Corretto\jdk21).
+
+🔹 2. Configurar JDK 21 en IntelliJ
+
+Abrí IntelliJ IDEA.
+
+Andá a File > Project Structure (Ctrl+Alt+Shift+S).
+
+En la pestaña Project, buscá:
+
+Project SDK → seleccioná Amazon Corretto 21 (si no aparece, tocá en Add SDK > JDK y elegí la carpeta donde instalaste Corretto 21).
+
+Project language level → elegí 21 (Preview) o 21 - Switch expressions, Records, etc..
+
+📷 Simulación:
+
+Project SDK:  Amazon Corretto 21
+Project language level:  21 (Preview)
+
+🔹 3. Ajustar el SDK para los módulos
+
+En la misma ventana (Project Structure), entrá en Modules.
+
+Seleccioná tu módulo (vehiculo).
+
+En Dependencies > Module SDK elegí Amazon Corretto 21.
+
+📷 Simulación:
+
+Module SDK: Amazon Corretto 21
+
+🔹 4. Verificar configuración de Maven
+
+Andá a File > Settings > Build, Execution, Deployment > Build Tools > Maven.
+
+En Runner, asegurate que el campo JRE esté en Amazon Corretto 21.
+
+📷 Simulación:
+
+Runner JRE: Amazon Corretto 21
+
+🔹 5. Validar en la terminal
+
+Abrí la terminal dentro de IntelliJ y ejecutá:
+
+java -version
+
+
+Debería mostrar algo como:
+
+openjdk version "21.0.x" 2025-...
+OpenJDK Runtime Environment Corretto-21...

@@ -25,38 +25,50 @@
     a) docker build -t vehiculo:0.1 .  (importante el último punto no olvidarse)
        este comando lo que hace es buscar en la misma carpeta un Dockerfile y le va poner
          como nombre de imagen vehiculo y su versiòn 0.1
-    b) docker run -p 8080:8080 vehiculo:0.1
+    b) OPCIONAL
+       docker run -p 8080:8080 vehiculo:0.1
        Hasta este punto, la app deberìa levantar pero no se conecta con la BD.
     c) definir el docker-compose.yml
-            ej:
-              version: "3.9"
-              services:
-                  spring-tienda:
-                      image: 'vehiculo:0.1'
-                      container_name: spring-vehiculo-01
-                      ports:
-                          - 8080:8080
-                      networks:
-                          - spring-vehiculo-networks
-                  db:
-                      image: 'postgres:14.3'
-                      container_name: db-postgres-vehiculo-01
-                      ports:
-                          - 5432:5432
-                      networks:
-                          - spring-vehiculo-networks
-                      environment:
-                          - POSTGRES_USER=postgres
-                          - POSTGRES_PASSWORD=vehiculoMaac
-                          - POSTGRES_DB=vehiculo-01
-                      volumes:
-                          - db-data:/var/lib/postgresql/data
+           version: "3.9"
 
-              networks:
-                  spring-vehiculo-networks:
-                      driver: bridge
-              volumes:
-                  db-data:
+           services:
+             spring-vehiculo:
+               image: vehiculo:0.1
+               container_name: spring-vehiculo-01
+               ports:
+                 - 8080:8080
+               networks:
+                 - spring-vehiculo-networks
+               depends_on:
+                 - db
+               environment:
+                 SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/vehiculo
+                 SPRING_DATASOURCE_USERNAME: postgres
+                 SPRING_DATASOURCE_PASSWORD: vehiculoMaac
+                 SPRING_JPA_HIBERNATE_DDL_AUTO: update
+                 SPRING_JPA_SHOW_SQL: "true"
+
+             db:
+               image: postgres:14.3
+               container_name: db-postgres-vehiculo-01
+               networks:
+                 - spring-vehiculo-networks
+               environment:
+                 - POSTGRES_USER=postgres
+                 - POSTGRES_PASSWORD=vehiculoMaac
+                 - POSTGRES_DB=vehiculo
+               volumes:
+                 - db-data:/var/lib/postgresql/data
+               ports:
+                 - 5432:5432
+
+           networks:
+             spring-vehiculo-networks:
+               driver: bridge
+
+           volumes:
+             db-data:
+
     d) Luego ejecutar el siguiente comando:
         docker-compose up
 
