@@ -1,0 +1,64 @@
+1- Build Project
+2- Ir a Maven
+    a- Dentro del Lifecycle :
+        i) Clean
+        ii) validate
+        iii) compile
+        iV ) text --> desactivarlo porque no hay (seleccionando el circulo de prohibido (en el menú de maven)
+        v) package
+
+        Luego de hacer estos pasos, (si resultó todo OK) se puede ver en :
+          target
+            >> el jar generado. para este proyecto es:
+                vehiculo-0.0.1-SNAPSHOT.jar
+        Este es el "flat-jar" que está listo para correr
+
+3- En una carpeta (puede llamarse : VehiculoDockerizar) por ejemplo,
+   a - copiar el flat-jar (generado previamente)
+   b - crear un Dockerfile
+       ej: podría tener estas líneas:  --FROM amazoncorretto:19.0.1-alpine3.16
+                                       FROM amazoncorretto:21-alpine3.22
+                                       COPY vehiculo-0.0.1-SNAPSHOT.jar app.jar
+                                       ENTRYPOINT ["java","-jar","/app.jar"]
+
+4- ejecutar desde la consola:
+    a) docker build -t vehiculo:0.1 .  (importante el último punto no olvidarse)
+       este comando lo que hace es buscar en la misma carpeta un Dockerfile y le va poner
+         como nombre de imagen vehiculo y su versiòn 0.1
+    b) docker run -p 8080:8080 vehiculo:0.1
+       Hasta este punto, la app deberìa levantar pero no se conecta con la BD.
+    c) definir el docker-compose.yml
+            ej:
+              version: "3.9"
+              services:
+                  spring-tienda:
+                      image: 'vehiculo:0.1'
+                      container_name: spring-vehiculo-01
+                      ports:
+                          - 8080:8080
+                      networks:
+                          - spring-vehiculo-networks
+                  db:
+                      image: 'postgres:14.3'
+                      container_name: db-postgres-vehiculo-01
+                      ports:
+                          - 5432:5432
+                      networks:
+                          - spring-vehiculo-networks
+                      environment:
+                          - POSTGRES_USER=postgres
+                          - POSTGRES_PASSWORD=vehiculoMaac
+                          - POSTGRES_DB=vehiculo-01
+                      volumes:
+                          - db-data:/var/lib/postgresql/data
+
+              networks:
+                  spring-vehiculo-networks:
+                      driver: bridge
+              volumes:
+                  db-data:
+    d) Luego ejecutar el siguiente comando:
+        docker-compose up
+
+
+
