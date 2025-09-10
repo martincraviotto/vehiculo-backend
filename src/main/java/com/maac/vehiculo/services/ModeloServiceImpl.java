@@ -3,6 +3,7 @@ package com.maac.vehiculo.services;
 import com.maac.vehiculo.domain.Modelo;
 import com.maac.vehiculo.mappers.ModelosMapper;
 import com.maac.vehiculo.persistence.repositories.ModeloRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class ModeloServiceImpl implements  ModeloService{
 
@@ -17,6 +19,7 @@ public class ModeloServiceImpl implements  ModeloService{
     ModelosMapper modelosMapper;
 
     public ModeloServiceImpl(ModeloRepository modeloRepository, ModelosMapper modelosMapper) {
+        log.info("Ejecutando constructor: ModeloServiceImpl");
         this.modeloRepository = modeloRepository;
         this.modelosMapper = modelosMapper;
     }

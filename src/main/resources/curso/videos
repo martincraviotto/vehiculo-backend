@@ -1,0 +1,8 @@
+Video 4
+    1:06 --> Configuracion BD - Dockerizada.
+    1:07 --> Conexion con PG-Admin
+    1:09 --> Conexion Springboot con la BD
+
+Video 5
+    1:10 --> Logback
+    1:23 --> Monitore de Logs (para Infraestructura)
