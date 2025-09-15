@@ -12,8 +12,9 @@ import java.util.List;
 
 
 @Slf4j
-@ConditionalOnProperty(prefix = "implementacion", value = "marcas", havingValue = "motos")
 @Lazy
+// es es para definir que implementación utilizar en base a la configuracion en el archivo de propiedades
+@ConditionalOnProperty(prefix = "implementacion", value = "marcas", havingValue = "motos")
 @Service("motos")
 public class MarcasMotosServiceImpl implements  MarcasService{
 

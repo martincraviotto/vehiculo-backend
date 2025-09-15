@@ -1,7 +1,5 @@
 package com.maac.vehiculo.domain;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.maac.vehiculo.validators.Cuit;
@@ -9,16 +7,12 @@ import com.maac.vehiculo.validators.groups.OnCreate;
 import com.maac.vehiculo.validators.groups.OnUpdate;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
 
-import java.time.LocalDate;
-
 @JsonPropertyOrder({"webSite", "marca", "id"})
-@Schema(description = "Schema de una Marca de Vehiculo")
+@Schema(description = "Schema que define la  Marca de Vehiculo")
 @Data
-//@AllArgsConstructor
 public class Marca {
 
     @NonNull

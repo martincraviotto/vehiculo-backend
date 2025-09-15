@@ -23,10 +23,10 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+@Tag(name = "Api MicroService Vehiculo - Marcas", description = "CRUD  de Marcas de Vehículos")
 @Slf4j
 @RestController
 @RequestMapping("/marcas")
-@Tag(name = "Api MicroService Vehiculo - Marcas", description = "CRUD  de Marcas de Vehículos")
 public class MarcasRestController {
 
 

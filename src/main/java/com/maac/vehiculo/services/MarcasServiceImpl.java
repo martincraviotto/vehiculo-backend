@@ -12,9 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j //Sirve para disponer de un logger.
-@Lazy
-@Service("autos")
+@Lazy // Retrasa la instalación hasta que sea necesaria.
+// es es para definir que implementación utilizar en base a la configuracion en el archivo de propiedades
 @ConditionalOnProperty(prefix = "implementacion", value = "marcas", havingValue = "autos")
+@Service("autos")
 public class MarcasServiceImpl implements  MarcasService{
 
 

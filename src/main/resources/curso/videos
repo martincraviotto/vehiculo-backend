@@ -1,9 +1,115 @@
+CTRL + ALT + L --> En IntellJ Idea se usa para formatear el código.
+
+Video 1
+    21:30 --> Utilización de las buenas prácticas de los servicios rest
+                    - Utilizar sustantivos en plural
+                    - No anidar más de 3 recursos por endpoints
+                    - Cantidad de caracteres que deben utilizar la documentación en swagger.
+    26:40 --> Explicación de la anatomía de un microservicio
+    35:00 --> Creación de un proyecto SpringBoot (Spring Initializer)
+    41:50 --> Proyecto creado y cargado en IntelliJ Idea.
+    50:00 --> Indicación que hacer luego de agregar una nueva dependencia - Actualización de Maven.
+    56:00 --> Clases RestController (con @RestController)
+    57:00 --> Utilización de @GetMapping
+ 01:02:00 --> @PathVariable
+ 01:09:00 --> Lombok (https://projectlombok.org/features/Data)
+ 01:10:14 --> Instalación del Plugin de Lombok en IntelliJ Idea
+ 01:18:00 --> Definición típica (CRUD) de una ClaseRestController
+ 01:23:00 --> Definición @GetMapping (Justificación de las buenas prácticas)  SIEMPRE PLURAL PARA INDICAR SERVICIO REST QUE SE QUIERE INVOCAR
+ 01:37:00 --> Definición @DeleteMapping
+
+Video 2
+ 00:02:40 --> Postman
+ 00:07:35 --> Definición @PutMapping (https://spring.io/guides/tutorials/rest)
+ 00:08:20 --> Definición @RequestBody (para recibir un objeto como parámetro)
+ 00:09:00 --> Utilización de Postman para trabajar con el verbo Put (modificar un objeto) y como enviarlo desde postman.
+ 00:14:35 --> Definición @PostMapping (para crear un recurso)
+ 00:17:09 --> Definición de los Códigos HTTP de respuestas
+                    get/ 200 - OK
+                    post / 201 - CREATED
+                    put / 200 o 204 - OK
+                    delete / 200 o 204 - OK
+                    400 - Bad Request (està mal formado el requerimiento o peticiòn)
+                    401 - Unauthorized
+                    404 - Not found
+                    500 - Internal Error server
+ 00:18:57 --> Utilización del objeto ResponseEntity (es un wrapper)
+ 00:19:20 --> ResponseEntity.ok(objeto) -- Utilización de ResponseEntity como una factoría para la devolución de los código HTTP
+ 00:21:20 --> ResponseEntity.noContent().build()
+ 00:22:37 --> ResponseEntity.create(location).build() --> ver ejemplo sobre personas create personas
+ 00:29:47 --> ResponseEntity.notFound().build() -- Error http: 404
+ 00:32:00 --> ResponseEntity.badRequest().build()
+ 00:33:50 --> ResponseEntity<?>  Utilization de los WildCard (para retornar un tipo genèrico)
+ 00:35:00 --> @RequestMapping("/sustantivoPlural") Unificación / Generalización de las rutas del endpoints
+ 00:37:32 --> Buenas prácticas en la definición de los Endpoints
+ 00:39:00 --> Buenas prácticas - Utilización de Guiones Intermedios (Hyphen) - No utilizar CamelCase
+ 00:42:00 --> Documentación - OpenApi - Swagger
+     00:45:34 --> Customización de Swagger - Clase con el detalle (https://springdoc.org/)
+     00:47:15 --> Customización de Swagger @Tag - Detalle de lo que muestra el Rest en su parte general.
+     00:48:25 --> Customización de Swagger @Operation - Detalle de lo que muestra el Rest en particular para cada método.
+     00:53:32 --> Customización de Swagger @ApiResponse - Detalle de lo que codigo http responde el endpoints.
+     00:55:00 --> Customización de Swagger @Parameter - Detalle de los parámetros que recibe el endpoints
+     00:56:00 --> Customización de Swagger @Schema - Detalle del shema con el que trabaja un endpoins. IMPORTANTE: para que aparezca debe estar presente en algún parametro o ser la devolución de un endpoins. Sino no aparece.
+ 01:02:00 --> Services @Service
+ 01:06:52 --> @Autowired
+ 01:08:00 --> Services con Interfaces - Mejor opción
+ 01:10:00 --> Inyection de Clases en el Constructor - Mejor Opción - Reemplaza al @Autowired
+ 01:14:00 --> @Primary para desambiguar que implementación debe utilizar
+ 01:15:20 --> @Service("alias") junto con @Qualifier("alias") para desambiguar que implementación debe utilizar
+ 01:17:00 --> Definición @PatchMapping
+
+Video 3
+    00:01:20 --> Sitios de referencias
+        Stackoverflow
+        Baeldung
+        arquitecturajava.com
+        jenkov.com (para todo lo que tiene que ver con Java - no tanto con springboot)
+        mkyong.com
+    00:19:30 --> @Slf4j - Para logger
+    00:22:46 --> @Lazy  - Para demorar la inyección de la dependencia.
+    00:26:27 --> @ConditionalOnProperty() - Para desambiguar la implementación de Services a utilizar - definiendo en el application.properties
+    00:38:50 --> @Component - para generación de cierto comportamiento propio. (ver imagen : Stereotypes.png)
+    00:44:21 --> Generación de un nuevo Stereotypes (ej.Report) luego se usa como @Report
+    00:46:38 --> @Configuration
+                    Las implementaciones de este tipo de clases se ejecutan en el tiempo de Arranque, y por eso la podemos utilizar para la lectura
+                    de los archivos de propiedades.
+    00:50:58 --> @ConfigurationProperties - para la lectura de las Properties - application.properties
+    00:52:27 --> Utilización de las propiedades del archivo application.properties leidas previamente.
+    00:56:10 --> @PropertySource(value="classpath:nombreArchivo.properties") - Segmentación del archivo de propiedades -
+    01:02:00 --> server.port - Configuración del puerto
+    01:03:00 --> server.servlet.context-path - Configuración de la base path de la url
+    01:05:00 --> Postman - enviroment - reconfiguracion de acuerdo al cambio de la url
+    01:10:00 --> Validaciones JAVA BEAN VALIDATION - Referencia JSR 380
+    01:10:00 --> @NotNull
+    01:15:00 --> @Validated - en el parámetro del endpoint para que efectúe la validación definida
+    01:16:00 --> @NotBlank - Validaciones Java
+    01:18:25 --> @Size - Validaciones Java
+    01:20:00 --> @Min- @Max - Validaciones Java
+    01:21:00 --> @AssertFalse / @AssertTrue - Validaciones Java
+
+
 Video 4
-    1:06 --> Configuracion BD - Dockerizada.
-    1:07 --> Conexion con PG-Admin
-    1:09 --> Conexion Springboot con la BD
+    00:02:48 --> @Email
+    00:02:48 --> @Positive / @PositiveOrZero
+    00:02:48 --> @Negative / @NegativeOrZero
+    00:02:48 --> @Past / @PastOrPresent
+    00:02:48 --> @Future / @FutureOrPresent
+    00:05:23 --> Custom Validators
+    00:18:00 --> Validacion por grupos onUpdate / onCreate -- @Validate(OnUpdate.class) @NotNull(grupos=OnUpdate.class)
+    00:22:36 --> Vistas Json - @JsonProperty / @JsonIgnore / @JsonPropertyOrder
+    00:27:10 --> Excepciones (rfc 7807)
+        00:33:00 --> Aclaración de los tipos Optional<Clase> de Java
+                      Optional.empty()
+    00:43:29 --> @ResponseStatus(httpStatus.NOT_FOUD)
+    00:45:33 --> @RestControllerAdvice / @ExceptionHandler
+    00:50:00 --> Persistencia - JPA
+    00:54:00 --> Docker
+    01:06:00 --> Configuración BD - Dockerizada.
+    01:07:00 --> Conexión con PG-Admin
+    01:09:00 --> Conexión Springboot con la BD / Dependencias Maven JPA + PostgreSQL
+    01:14:00 --> @Entity / @Id / @GeneratedVAlue(strategy = GeneratioNType.SEQUENCE) / @Column
 
 Video 5
     0:59 --> Dockerizar el proyecto
     1:10 --> Logback
-    1:23 --> Monitore de Logs (para Infraestructura)
+    1:23 --> Monitoreo de Logs (para Infraestructura)
