@@ -88,12 +88,12 @@ Video 3
     01:21:00 --> @AssertFalse / @AssertTrue - Validaciones Java
 
 
-Video 4
-    00:02:48 --> @Email
-    00:02:48 --> @Positive / @PositiveOrZero
-    00:02:48 --> @Negative / @NegativeOrZero
-    00:02:48 --> @Past / @PastOrPresent
-    00:02:48 --> @Future / @FutureOrPresent
+Video 4 (PGAdmin / Docker
+    00:02:48 --> @Email Validaciones Java
+    00:02:48 --> @Positive / @PositiveOrZero Validaciones Java
+    00:02:48 --> @Negative / @NegativeOrZero Validaciones Java
+    00:02:48 --> @Past / @PastOrPresent Validaciones Java
+    00:02:48 --> @Future / @FutureOrPresent Validaciones Java
     00:05:23 --> Custom Validators
     00:18:00 --> Validacion por grupos onUpdate / onCreate -- @Validate(OnUpdate.class) @NotNull(grupos=OnUpdate.class)
     00:22:36 --> Vistas Json - @JsonProperty / @JsonIgnore / @JsonPropertyOrder
@@ -109,7 +109,19 @@ Video 4
     01:09:00 --> Conexión Springboot con la BD / Dependencias Maven JPA + PostgreSQL
     01:14:00 --> @Entity / @Id / @GeneratedVAlue(strategy = GeneratioNType.SEQUENCE) / @Column
 
-Video 5
-    0:59 --> Dockerizar el proyecto
-    1:10 --> Logback
-    1:23 --> Monitoreo de Logs (para Infraestructura)
+Video 5 (JPA / Dockerizar / Logback / MapStruct / Pageable)
+    00:02:45 --> spring.jpa.hibernate.ddl-auto=create
+    00:06:30 --> @Repository - JPARepository
+    00:09:43 --> JPA --> findById(id) (además de usar y explicar map optional)
+    00:19:16 --> JPA --> findAll() (además usa stream / collect / Collectors.toList())
+    00:24:00 --> Pageable / Page / JPA --> findAll(pageble)
+    00:29:58 --> @PageableDefault
+    00:32:25 --> Jpa specification (para filtros)
+    00:34:20 --> @Mapper  -- MapStruct
+        00:37:16 --> Explica que cuando se modifica el pom.xml tocando un plugin es necesario hacer una compilacion con maven
+    00:47:40 --> Wildcards -- JPA --> findByIdLessThan(id)  el Id es el atributo por el que quiero buscar y tiene que ser camelCase
+            findbyEdadLessThan(edad)
+            (https://www.baeldung.com/spring-jpa-like-queries)
+    00:59:00 --> Dockerizar el proyecto
+    01:10:00 --> Logback
+    01:23:00 --> Monitoreo de Logs (para Infraestructura)
