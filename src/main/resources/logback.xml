@@ -1,3 +1,14 @@
+<!--logging.pattern.console=%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg [%caller{1}]%n
+Explicación de los placeholders:
+%d{yyyy-MM-dd HH:mm:ss.SSS} → fecha y hora con milisegundos
+[%thread] → nombre del hilo
+%-5level → nivel del log (INFO, DEBUG, ERROR)
+%logger{36} → clase que hace el log (máx. 36 caracteres)
+%msg → mensaje
+[%caller{1}] → muestra Clase.Método(Línea)
+%n → salto de línea
+-->
+
 <configuration>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
@@ -11,6 +22,7 @@
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
         </encoder>
+
     </appender>
 
     <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">

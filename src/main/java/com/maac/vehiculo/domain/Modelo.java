@@ -24,5 +24,10 @@ public class Modelo {
 
     @Schema(description = "Descripcion del modelo de una marca de un vehículo", example = "Modelo Base de la marca")
     private String description;
-
+/*
+    @NonNull
+    @Schema(description = "Marca del modelo")
+    @NotBlank
+    private Marca marca;
+*/
 }

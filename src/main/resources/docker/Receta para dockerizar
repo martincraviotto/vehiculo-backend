@@ -14,7 +14,7 @@
         Este es el "flat-jar" que está listo para correr
 
 3- En una carpeta (puede llamarse : VehiculoDockerizar) por ejemplo,
-   a - copiar el flat-jar (generado previamente)
+   a - copiar el archivo jar (flat-jar) (generado previamente)
    b - crear un Dockerfile
        ej: podría tener estas líneas:  --FROM amazoncorretto:19.0.1-alpine3.16
                                        FROM amazoncorretto:21-alpine3.22

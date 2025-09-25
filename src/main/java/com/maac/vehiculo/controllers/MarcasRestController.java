@@ -1,27 +1,33 @@
 package com.maac.vehiculo.controllers;
 
+import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.databind.DatabindException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.maac.vehiculo.configurations.AppConfig;
 import com.maac.vehiculo.configurations.ParametrosConfig;
 import com.maac.vehiculo.domain.Marca;
+import com.maac.vehiculo.persistence.entities.MarcaEntity;
 import com.maac.vehiculo.services.MarcasService;
 import com.maac.vehiculo.validators.groups.OnCreate;
-import com.maac.vehiculo.validators.groups.OnUpdate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.flogger.Flogger;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Tag(name = "Api MicroService Vehiculo - Marcas", description = "CRUD  de Marcas de Vehículos")
 @Slf4j
@@ -33,69 +39,95 @@ public class MarcasRestController {
     MarcasService marcasService;
     AppConfig appConfig;
     ParametrosConfig parametrosConfig;
+    private final ObjectMapper objectMapper; //es la clase principal de Jackson, librería para serializar y deserializar JSON.
 
-    public MarcasRestController(@Lazy MarcasService marcasService, AppConfig appConfig, ParametrosConfig parametrosConfig) {
-
+    public MarcasRestController(@Lazy MarcasService marcasService, AppConfig appConfig, ParametrosConfig parametrosConfig, ObjectMapper objectMapper) {
         log.info("Constructor MarcasRestController - AppConfig {} - Parametros : {} ", appConfig,parametrosConfig);
         this.marcasService = marcasService;
-
+        this.objectMapper=objectMapper;
+        this.appConfig=appConfig;
+        this.parametrosConfig=parametrosConfig;
     }
 
-    ArrayList<Marca> marcas = new ArrayList<>(
-            List.of(new Marca(1L,"Jeep"),
-                    new Marca(2L,"Ford"),
-                    new Marca(3L,"Fiat"))
-    );
+    @ApiResponse(responseCode = "200", description = "Operacion exitosa - Recurso encontrado")
+    @Operation(summary = "Recupera todas las marcas de vehículos", description = "Recupera todas las marcas de vehiculos que se disponen. ")
+    @GetMapping
+    public ResponseEntity<?> listMarcas(){
+        List<Marca> marcas = marcasService.listAllMarcas();
+        return ResponseEntity.ok(marcas);
+    }
+
 
 
     @ApiResponse(responseCode = "200", description = "Operacion exitosa - Recurso encontrado")
     @ApiResponse(responseCode = "400", description = "Petición Incorrecta")
     @ApiResponse(responseCode = "404", description = "Recurso No Encontrado")
     @Operation(summary = "Recuperar una Marca por su Id", description = "Recupera una marca por su Id de tipo numérico. No puede ser un valor negativo. ")
-
     @GetMapping("/{id}")
     public ResponseEntity<?> getMarcaById(@Parameter(description = "Id de la marca - Valor entero", required = true, example = "1")
                                           @PathVariable Long id){
 
-        if(id < 0){
+        if(id < 0)
             return ResponseEntity.badRequest().build();
-        }
-
-        for (Marca marca: marcasService.listAllMarcas()){
-            if(marca.getId().equals(id))
-                return  ResponseEntity.ok(marca);
-        }
-        return ResponseEntity.notFound().build();
-    }
-
-
-
-    @ApiResponse(responseCode = "200", description = "Operacion exitosa - Recurso encontrado")
-    @Operation(summary = "Recupera todas las marcas de vehículos", description = "Recupera todas las marcas de vehiculos que se disponen. ")
-
-    @GetMapping
-    public ResponseEntity<?> listMarcas(){
-        List<Marca> marcas = marcasService.listAllMarcas();
-
-        return ResponseEntity.ok(marcas);
+        else
+            return this.marcasService.getMarcaById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
 
     @ApiResponse(responseCode = "201", description = "Operacion exitosa - Recurso dado de alta")
     @ApiResponse(responseCode = "400", description = "Petición Incorrecta")
     @Operation(summary = "Crea una nueva Marca de Vehiculo", description = "Crea una nueva marca de vehículo")
-
     @PostMapping
-    public ResponseEntity<?> createMarca(@RequestBody  @Validated(OnCreate.class)  Marca marca){
-        this.marcas.add(marca);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{id}")
-                .buildAndExpand(marca.getId())
-                .toUri();
-
-        return ResponseEntity.created(location).build();
+    public ResponseEntity<?> addMarca(@RequestBody  @Validated(OnCreate.class)  Marca marca){
+        Optional<Marca> marcaOptional = marcasService.addMarca(marca);
+        if(marcaOptional.isPresent()) {
+            URI location = ServletUriComponentsBuilder
+                    .fromCurrentRequest()
+                    //.path("/{id}")
+                    .path("/"+marcaOptional.get().getId())
+                    .buildAndExpand(marca.getId())
+                    .toUri();
+            return ResponseEntity.created(location).build();
+        }else
+            return ResponseEntity.badRequest().build();
     }
+
+    @GetMapping("/seeds")
+    public ResponseEntity<?> seeds(){
+        log.info("Creación masiva de  Marcas - seeds ");
+        try {
+            InputStream is = getClass().getClassLoader().getResourceAsStream("./seeds/seedMarcas.json");
+            if(is == null){
+                log.error("No se ha podido leer el json: seedMarcas.json");
+                return ResponseEntity.notFound().build();
+            }
+            List<Marca> marcas = Arrays.asList(objectMapper.readValue(is,Marca[].class));
+            Optional<List<Marca>> optionalMarcaList = marcasService.addMarcas(marcas);
+
+            if(optionalMarcaList.isPresent()) {
+                return ResponseEntity.ok(optionalMarcaList.get());
+            }else
+                return ResponseEntity.badRequest().build();
+
+
+        } catch (StreamReadException e) {
+            log.error("Error al intentar convertir en objetos del tipo Marca el json leido ", e);
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                    .body("Error al intentar convertir en objetos del tipo Marca el json leido");
+        } catch (Exception e) {
+            log.error("Error inesperado al cargar seeds", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error interno del servidor");
+        }
+
+    }
+
+
+    /*
+
+
 
     @ApiResponse(responseCode = "200", description = "Operacion exitosa - Recurso actualizado")
     @ApiResponse(responseCode = "400", description = "Petición Incorrecta - Corroborar con el schema Marca")
@@ -149,4 +181,8 @@ public class MarcasRestController {
         }
         return ResponseEntity.notFound().build();
     }
+
+
+
+     */
 }

@@ -15,17 +15,21 @@ import lombok.NonNull;
 @Data
 public class Marca {
 
-    @NonNull
+    //@NonNull
     @Schema(description = "Identificador de una marca", example = "1")
     private Long id;
-
 
     @NonNull //Lombok, y es para hacer mandatorio el atributo en el constructor.
     @NotNull(groups = OnCreate.class) //Java Validation - Valor sí o sí.
     @Schema(description = "Nombre de una marca", example = "Jeep")
     private String marca;
 
+    @Schema(description = "Descripcion de una marca", example = "Fabricante estadounidense de autos deportivos")
+    private String descripcion;
 
+
+
+    /*
     @JsonProperty("SitioWeb")
     @NotBlank(groups = OnUpdate.class) //Java Validation
     @Size(min = 6, max = 20) //Java Validation
@@ -37,6 +41,8 @@ public class Marca {
     @Schema(description = "Indica si la marca es Argentina", example = "True")
     private boolean industriaArgentina;
 
+
+     */
     /*
     @Email
     private String mail;
@@ -57,9 +63,10 @@ public class Marca {
     @FutureOrPresent
     //@Future
     private LocalDate auditoria;
-    */
+
+
 
     @Cuit(groups = {OnUpdate.class, OnCreate.class})
     private String cuit;
-
+    */
 }
