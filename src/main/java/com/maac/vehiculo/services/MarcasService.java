@@ -10,9 +10,11 @@ public interface MarcasService {
 
     public List<Marca> listAllMarcas();
 
-    public Optional<Marca> getMarcaById(Long id);
+    public Marca getMarcaById(Long id);
 
-    public Optional<Marca> addMarca(Marca marca);
+    public Marca addMarca(Marca marca);
 
-    public Optional<List<Marca>> addMarcas(List<Marca> marcas);
+    public List<Marca> addMarcas(List<Marca> marcas);
+
+    public Marca updateMarca(Marca marca);
 }

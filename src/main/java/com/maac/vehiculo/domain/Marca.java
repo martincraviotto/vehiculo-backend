@@ -19,7 +19,7 @@ public class Marca {
     @Schema(description = "Identificador de una marca", example = "1")
     private Long id;
 
-    @NonNull //Lombok, y es para hacer mandatorio el atributo en el constructor.
+    //@NonNull //Lombok, y es para hacer mandatorio el atributo en el constructor.
     @NotNull(groups = OnCreate.class) //Java Validation - Valor sí o sí.
     @Schema(description = "Nombre de una marca", example = "Jeep")
     private String marca;

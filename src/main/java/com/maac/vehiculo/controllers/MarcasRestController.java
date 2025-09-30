@@ -1,19 +1,17 @@
 package com.maac.vehiculo.controllers;
 
 import com.fasterxml.jackson.core.exc.StreamReadException;
-import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.maac.vehiculo.configurations.AppConfig;
 import com.maac.vehiculo.configurations.ParametrosConfig;
 import com.maac.vehiculo.domain.Marca;
-import com.maac.vehiculo.persistence.entities.MarcaEntity;
 import com.maac.vehiculo.services.MarcasService;
 import com.maac.vehiculo.validators.groups.OnCreate;
+import com.maac.vehiculo.validators.groups.OnUpdate;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.extern.flogger.Flogger;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
@@ -22,7 +20,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.Arrays;
@@ -57,8 +54,6 @@ public class MarcasRestController {
         return ResponseEntity.ok(marcas);
     }
 
-
-
     @ApiResponse(responseCode = "200", description = "Operacion exitosa - Recurso encontrado")
     @ApiResponse(responseCode = "400", description = "Petición Incorrecta")
     @ApiResponse(responseCode = "404", description = "Recurso No Encontrado")
@@ -66,32 +61,26 @@ public class MarcasRestController {
     @GetMapping("/{id}")
     public ResponseEntity<?> getMarcaById(@Parameter(description = "Id de la marca - Valor entero", required = true, example = "1")
                                           @PathVariable Long id){
-
         if(id < 0)
             return ResponseEntity.badRequest().build();
         else
-            return this.marcasService.getMarcaById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+            return ResponseEntity.ok(this.marcasService.getMarcaById(id));
     }
-
 
     @ApiResponse(responseCode = "201", description = "Operacion exitosa - Recurso dado de alta")
     @ApiResponse(responseCode = "400", description = "Petición Incorrecta")
     @Operation(summary = "Crea una nueva Marca de Vehiculo", description = "Crea una nueva marca de vehículo")
     @PostMapping
     public ResponseEntity<?> addMarca(@RequestBody  @Validated(OnCreate.class)  Marca marca){
-        Optional<Marca> marcaOptional = marcasService.addMarca(marca);
-        if(marcaOptional.isPresent()) {
-            URI location = ServletUriComponentsBuilder
-                    .fromCurrentRequest()
-                    //.path("/{id}")
-                    .path("/"+marcaOptional.get().getId())
-                    .buildAndExpand(marca.getId())
-                    .toUri();
-            return ResponseEntity.created(location).build();
-        }else
-            return ResponseEntity.badRequest().build();
+        Marca marcaAdded = marcasService.addMarca(marca);
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                //.path("/{id}")
+                .path("/"+marcaAdded.getId())
+                .buildAndExpand(marca.getId())
+                .toUri();
+        return ResponseEntity.created(location).build();
     }
 
     @GetMapping("/seeds")
@@ -104,14 +93,9 @@ public class MarcasRestController {
                 return ResponseEntity.notFound().build();
             }
             List<Marca> marcas = Arrays.asList(objectMapper.readValue(is,Marca[].class));
-            Optional<List<Marca>> optionalMarcaList = marcasService.addMarcas(marcas);
+            List<Marca> marcaList = marcasService.addMarcas(marcas);
 
-            if(optionalMarcaList.isPresent()) {
-                return ResponseEntity.ok(optionalMarcaList.get());
-            }else
-                return ResponseEntity.badRequest().build();
-
-
+            return ResponseEntity.ok(marcaList);
         } catch (StreamReadException e) {
             log.error("Error al intentar convertir en objetos del tipo Marca el json leido ", e);
             return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
@@ -125,27 +109,32 @@ public class MarcasRestController {
     }
 
 
-    /*
-
-
-
     @ApiResponse(responseCode = "200", description = "Operacion exitosa - Recurso actualizado")
     @ApiResponse(responseCode = "400", description = "Petición Incorrecta - Corroborar con el schema Marca")
     @ApiResponse(responseCode = "404", description = "Recurso No Encontrado")
-    @Operation(summary = "Recuperar una Marca por su Id", description = "Recupera una marca por su Id de tipo numérico. No puede ser un valor negativo. ")
+    @Operation(summary = "Actualiza una Marca por su Id", description = "Recupera una marca por su Id de tipo numérico. No puede ser un valor negativo. ")
 
     @PutMapping
     public ResponseEntity<?> updateMarca(@RequestBody  @Validated(OnUpdate.class)  Marca marca){
-        for (Marca m1: this.marcas){
-            if(m1.getId().equals(marca.getId())) {
-                m1.setMarca(marca.getMarca());
-                return ResponseEntity.ok(marca);
-            }
+
+        if(marca.getId() <= 0)
+            return ResponseEntity.badRequest().build();
+        else {
+
+             return ResponseEntity.ok(this.marcasService.updateMarca(marca));
+            /*
+            Optional<Marca> marcaOptional = this.marcasService.updateMarca(marca);
+            if (marcaOptional.isPresent())
+                return ResponseEntity.ok(marcaOptional.get());
+            else
+                return ResponseEntity.notFound().build();
+
+             */
         }
-        return ResponseEntity.notFound().build();
+
     }
 
-
+/*
     @ApiResponse(responseCode = "200", description = "Operacion exitosa - Recurso eliminado")
     @ApiResponse(responseCode = "400", description = "Petición Incorrecta - Corroborar con el schema Marca")
     @ApiResponse(responseCode = "404", description = "Recurso No Encontrado")

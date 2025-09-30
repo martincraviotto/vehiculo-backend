@@ -36,18 +36,23 @@ public class MarcasMotosServiceImpl implements  MarcasService{
     }
 
     @Override
-    public Optional<Marca> getMarcaById(Long id) {
-        return Optional.empty();
+    public Marca getMarcaById(Long id) {
+        return null;
     }
 
     @Override
-    public Optional<Marca> addMarca(Marca marca) {
+    public Marca addMarca(Marca marca) {
 
         return null;
     }
 
     @Override
-    public Optional<List<Marca>> addMarcas(List<Marca> marcas) {
-        return Optional.empty();
+    public List<Marca> addMarcas(List<Marca> marcas) {
+        return marcas;
+    }
+
+    @Override
+    public Marca updateMarca(Marca marca) {
+        return null;
     }
 }

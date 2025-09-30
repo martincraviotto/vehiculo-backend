@@ -1,8 +1,10 @@
 package com.maac.vehiculo.services;
 
 import com.maac.vehiculo.domain.Marca;
+import com.maac.vehiculo.exceptions.MarcaNotFoundException;
 import com.maac.vehiculo.helpers.ReportPDFImpl;
 import com.maac.vehiculo.mappers.MarcasMapper;
+import com.maac.vehiculo.mappers.MarcasMapperImpl;
 import com.maac.vehiculo.persistence.entities.MarcaEntity;
 import com.maac.vehiculo.persistence.repositories.MarcaRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -44,27 +46,40 @@ public class MarcasServiceImpl implements  MarcasService{
     }
 
     @Override
-    public Optional<Marca> getMarcaById(Long id) {
+    public Marca getMarcaById(Long id) {
         log.info("Ejecutando getMarcaById - autos");
         return marcaRepository.findById(id)
-                .map(marcasMapper::mapToMarca);
+                .map(marcasMapper::mapToMarca)
+                .orElseThrow(MarcaNotFoundException::new);
     }
 
     @Override
-    public Optional<Marca> addMarca(Marca marca) {
+    public Marca addMarca(Marca marca) {
         MarcaEntity saved = marcaRepository.save(marcasMapper.mapToMarcaEntity(marca));
-        log.info("Ejecutando addMarca - autos - {}", saved);
-        return Optional.of(marcasMapper.mapToMarca(saved));
+        log.info("Ejecutando addMarca - autos - nueva Marca guardada : {}", saved);
+        return marcasMapper.mapToMarca(saved);
     }
 
     @Override
-    public Optional<List<Marca>> addMarcas(List<Marca> marcas) {
+    public List<Marca> addMarcas(List<Marca> marcas) {
         List<MarcaEntity> marcaEntityList = marcas.stream()
                 .map(marcasMapper::mapToMarcaEntity)
                 .collect(Collectors.toList());
         List<MarcaEntity> marcaEntityListSaved = marcaRepository.saveAll(marcaEntityList);
         log.info("Ejecutando addMarcas -seeds - autos");
-        return Optional.of(marcaEntityListSaved.stream().map(marcasMapper::mapToMarca).collect(Collectors.toList()));
+        return marcaEntityListSaved.stream().map(marcasMapper::mapToMarca).collect(Collectors.toList());
+    }
+
+    @Override
+    public Marca updateMarca(Marca marca) {
+        return this.marcaRepository.findById(marca.getId())
+                .map(marcaEntity -> {
+                    log.info("Ejecutando updateMarca - autos");
+                    MarcaEntity marcaEntityUpdated = this.marcaRepository.save(this.marcasMapper.mapToMarcaEntity(marca));
+                    log.info("Marca {} fue actualizada a {}", marca, marcaEntityUpdated);
+                    return this.marcasMapper.mapToMarca(marcaEntityUpdated);
+                })
+                .orElseThrow(MarcaNotFoundException::new);
     }
 
 
