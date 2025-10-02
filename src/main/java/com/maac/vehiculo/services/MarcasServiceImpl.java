@@ -4,7 +4,6 @@ import com.maac.vehiculo.domain.Marca;
 import com.maac.vehiculo.exceptions.MarcaNotFoundException;
 import com.maac.vehiculo.helpers.ReportPDFImpl;
 import com.maac.vehiculo.mappers.MarcasMapper;
-import com.maac.vehiculo.mappers.MarcasMapperImpl;
 import com.maac.vehiculo.persistence.entities.MarcaEntity;
 import com.maac.vehiculo.persistence.repositories.MarcaRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +12,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Slf4j //Sirve para disponer de un logger.
